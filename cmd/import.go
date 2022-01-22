@@ -15,6 +15,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -112,10 +113,14 @@ to quickly create a Cobra application.`,
 		}
 
 		followedArtists := []string{}
-		followedArtistsResponse, err := client.CurrentUsersFollowedArtists(context.Background())
+
+		followedArtistsResponse, err := client.CurrentUsersFollowedArtists(context.Background(), spotify.Limit(50))
 		if err != nil {
 			panic(err)
 		}
+
+		fmt.Println("Requesting followed artists")
+
 		for _, followed := range followedArtistsResponse.Artists {
 			fmt.Printf("Already following '%s'\n", followed.Name)
 			followedArtists = append(followedArtists, followed.Name)
@@ -143,14 +148,13 @@ to quickly create a Cobra application.`,
 									panic(err)
 								}
 								fmt.Println("OK")
+								time.Sleep(1 * time.Second)
 							}
 						}
 					}
 				}
-
 			}
 		}
-
 	},
 }
 
